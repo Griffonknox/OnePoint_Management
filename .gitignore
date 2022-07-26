@@ -4,6 +4,8 @@ Data/*
 /OnePoint_Upload/Script/config.py
 /OnePoint_BackUp/config.py
 
+/OnePoint_Data_Correction/config.py
+
 
 
 # Byte-compiled / optimized / DLL files
