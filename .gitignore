@@ -6,6 +6,10 @@ Data/*
 
 /OnePoint_Data_Correction/config.py
 
+/OnePoint_Followup_Report/config.py
+/OnePoint_Followup_Report/testing.csv
+/OnePoint_Followup_Report/testing_filter.csv
+
 
 
 # Byte-compiled / optimized / DLL files
