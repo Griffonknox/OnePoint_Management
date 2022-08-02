@@ -2,6 +2,8 @@ from .config import ScriptConfig
 from sqlalchemy import create_engine
 import pandas as pd
 from datetime import date, timedelta, datetime
+import pathlib
+from os.path import join
 
 def sql_cnx():
     username = ScriptConfig.USERNAME
@@ -29,14 +31,24 @@ def filterFollow_Ups(df):
     df['dateEntered'] = pd.to_datetime(df['dateEntered'])
 
 
-    """GET DATE TO FILTER BY MONDAY"""
-    today = datetime.today()
-    week_prior = today - timedelta(weeks=1)
-    yesterday = today - timedelta(days=1)
+    """GET DATE TO FILTER FROM SUNDAY TO LAST SUNDAY"""
+    now = datetime.today()
+    sunday = now - timedelta(days=now.weekday()) - timedelta(days=1)
+    lst_sunday = sunday - timedelta(weeks=1)
+    print(sunday)
+    print(lst_sunday)
 
-
-    df_last_week = df[(df['dateEntered'] >= week_prior)]
-
+    """FILTER DATE"""
+    df_last_week = df[(df['dateEntered'] >= lst_sunday) & (df['dateEntered'] <= sunday)]
     print(df_last_week.info())
 
-    df_last_week.to_csv("testing_filter.csv")
+    return df_last_week
+
+
+def saveFollow_Ups(dataframe):
+
+    starting_path = pathlib.Path(__file__).parent.absolute()
+    save_location = join(starting_path, ScriptConfig.SAVE_LOCATION)
+    file_name = join(save_location, "{}.csv".format(f'{datetime.today():%Y-%m-%d}'))
+    dataframe.to_csv(file_name, index=False)
+    return file_name

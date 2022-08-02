@@ -1,6 +1,5 @@
-from OnePoint_Followup_Report.utils import queryFollow_Ups, filterFollow_Ups
+from OnePoint_Followup_Report.utils import queryFollow_Ups, filterFollow_Ups, saveFollow_Ups
 import logging
-from datetime import datetime, timedelta, date
 
 logging.basicConfig(filename="Error_Log.txt", filemode='a', level=logging.DEBUG)
 
@@ -9,8 +8,11 @@ def Main():
     # try:
 
     df = queryFollow_Ups()
-    filterFollow_Ups(df)
+    df = filterFollow_Ups(df)
+    save_url = saveFollow_Ups(df)
+    print(save_url)
     print("finished")
+
 
     # except:
     #     # logging.exception("\n\n {}, Report Failed!".format(datetime.now()))
