@@ -1,7 +1,7 @@
 from .config import ScriptConfig
 from sqlalchemy import create_engine
 import pandas as pd
-from datetime import date, timedelta, datetime
+from datetime import timedelta, datetime
 import pathlib
 from os.path import join
 from email.mime.multipart import MIMEMultipart
@@ -45,7 +45,6 @@ def filterFollow_Ups(df):
 
     """FILTER DATE"""
     df_last_week = df[(df['dateEntered'] >= lst_sunday) & (df['dateEntered'] <= sunday)]
-    print(df_last_week.info())
 
     return df_last_week
 
@@ -95,19 +94,30 @@ def Email_Send(CONFIG, msg):
         server.sendmail(CONFIG.SMTP_EMAIL, em, msg.as_string())
     server.quit()
 
+def Email_Fail(MSG):
+    # Create a multipart message
+    msg = MIMEMultipart()
+    body_part = MIMEText("OnePoint Follow Up Report Failed  for the following reason\n\n{}.".format(MSG), 'plain')
+    msg['Subject'] = "OnePoint Follow Up Report Failed {}".format(f'{datetime.today():%Y-%m-%d}')
+    # Add body to email
+    msg.attach(body_part)
+
+    Email_Send(ScriptConfig, msg)
+
 
 def Main():
 
     try:
 
+        """QUERY FOLLOWUPS, FILTER FOR PAST WEEK, AND SAVE"""
         df = queryFollow_Ups()
         df = filterFollow_Ups(df)
         save_url = saveFollow_Ups(df)
 
+        """CALCULATE RESULTS, AND EMAIL"""
         results = countFollow_Ups(df)
-
         Email_Success(save_url, results)
 
-
-    except:
+    except Exception as e:
         logging.exception("\n\n {}, Report Failed!".format(datetime.now()))
+        Email_Fail( e)

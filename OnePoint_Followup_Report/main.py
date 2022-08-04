@@ -1,4 +1,4 @@
-from OnePoint_Followup_Report.utils import Main
+from OnePoint_Followup_Report.FollowUp_Report_Script import Main
 import logging
 
 logging.basicConfig(filename="Error_Log.txt", filemode='a', level=logging.DEBUG)
