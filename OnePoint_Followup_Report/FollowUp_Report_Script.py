@@ -24,10 +24,10 @@ def sql_cnx():
 def queryFollow_Ups():
 
     """QUERY FOLLOWUPS FROM DB"""
-    # df = pd.read_sql('SELECT * FROM follow_up', sql_cnx())  # read the entire table
+    df = pd.read_sql('SELECT * FROM follow_up', sql_cnx())  # read the entire table
 
     """TESTING JUST PULL DATA FROM CSV"""
-    df = pd.read_csv("testing.csv")
+    # df = pd.read_csv("testing.csv")
 
     return df
 
@@ -120,4 +120,4 @@ def Main():
 
     except Exception as e:
         logging.exception("\n\n {}, Report Failed!".format(datetime.now()))
-        Email_Fail( e)
+        Email_Fail(e)
